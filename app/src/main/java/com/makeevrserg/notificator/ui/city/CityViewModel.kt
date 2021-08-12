@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import kotlin.random.Random
 
 class CityViewModel(application: Application) : AndroidViewModel(application) {
@@ -30,6 +31,7 @@ class CityViewModel(application: Application) : AndroidViewModel(application) {
     private val _days = MutableLiveData(arrayOf<String>())
     public val days: LiveData<Array<String>>
         get() = _days
+
 
     /**
      * Настройки, которые хранят пользоватльское имя
@@ -65,8 +67,8 @@ class CityViewModel(application: Application) : AndroidViewModel(application) {
                 for (city in cities)
                     list.add(city.display_name)
                 _days.postValue(list.toTypedArray())
+            } catch (e: HttpException) {
             } catch (e: Exception) {
-                //Стоит ограничение на 2 запросов в секунду.
             }
         }
     }
@@ -77,7 +79,13 @@ class CityViewModel(application: Application) : AndroidViewModel(application) {
      */
     public fun onGetWeatherClicked() {
         viewModelScope.launch(Dispatchers.IO) {
-            FlaskAPI.retrofitService.getWeather(getToken).await()
+            try {
+                FlaskAPI.retrofitService.getWeather(getToken).await()
+
+            } catch (e: HttpException) {
+            } catch (e: Exception) {
+            }
+
         }
 
     }
@@ -90,16 +98,26 @@ class CityViewModel(application: Application) : AndroidViewModel(application) {
         val name = preferences.loadUser()
         if (name == null) {
             viewModelScope.launch(Dispatchers.IO) {
-                FlaskAPI.retrofitService.sendError(
-                    "Ошибка!",
-                    "Не удалось получить имя пользователя!",
-                    null,
-                    getToken
-                )
+                try {
+                    FlaskAPI.retrofitService.sendError(
+                        "Ошибка!",
+                        "Не удалось получить имя пользователя!",
+                        null,
+                        getToken
+                    )
+                } catch (e: HttpException) {
+                } catch (e: Exception) {
+                }
+
             }
         } else {
             viewModelScope.launch(Dispatchers.IO) {
-                FlaskAPI.retrofitService.getName(name, getToken)
+                try {
+                    FlaskAPI.retrofitService.getName(name, getToken)
+
+                } catch (e: HttpException) {
+                } catch (e: Exception) {
+                }
 
             }
         }
@@ -116,19 +134,29 @@ class CityViewModel(application: Application) : AndroidViewModel(application) {
 
         if (userName == null) {
             viewModelScope.launch(Dispatchers.IO) {
-                FlaskAPI.retrofitService.sendError(
-                    "Ошибка!",
-                    "Вы не ввели имя пользователя!",
-                    null,
-                    getToken
-                )
+                try {
+                    FlaskAPI.retrofitService.sendError(
+                        "Ошибка!",
+                        "Вы не ввели имя пользователя!",
+                        null,
+                        getToken
+                    )
+                } catch (e: HttpException) {
+                } catch (e: Exception) {
+                }
+
             }
         } else {
             viewModelScope.launch(Dispatchers.IO) {
                 val _userName = userName
-                val response = FlaskAPI.retrofitService.createUser(_userName, token).await()
-                if (response.result == "ok")
-                    preferences.saveUser(_userName ?: return@launch)
+                try {
+                    val response = FlaskAPI.retrofitService.createUser(_userName, token).await()
+                    if (response.result == "ok")
+                        preferences.saveUser(_userName ?: return@launch)
+
+                } catch (e: HttpException) {
+                } catch (e: Exception) {
+                }
 
 
             }
