@@ -105,7 +105,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         //В документации написано, что необходимо указывать этот id уникальным
         //Если они одинаковые, то старое уведомление будет перезаписывать новое
-        notificationManager.notify(0, notificationBuilder.build())
+        notificationManager.notify(Random.nextInt(5000), notificationBuilder.build())
     }
 
 

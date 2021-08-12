@@ -1,11 +1,15 @@
 package com.makeevrserg.notificator.ui.city
 
 import android.app.Application
+import android.app.NotificationManager
+import android.content.Context
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.ktx.messaging
+import com.makeevrserg.notificator.R
 import com.makeevrserg.notificator.network.CityAPI
 import com.makeevrserg.notificator.network.CityService
 import com.makeevrserg.notificator.network.FlaskAPI
@@ -13,10 +17,12 @@ import com.makeevrserg.notificator.network.FlaskService
 import com.makeevrserg.notificator.shared.Preferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class CityViewModel(application: Application) : AndroidViewModel(application) {
-
+    val _application = application
 
     /**
      * Список для AutoCompleteTextView, в котором пользователь вводит город
@@ -64,8 +70,6 @@ class CityViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
-
 
 
     /**
@@ -129,6 +133,38 @@ class CityViewModel(application: Application) : AndroidViewModel(application) {
 
             }
         }
+    }
+
+    /**
+     * Уведомление с прогрессом.
+     * Ничего не загружает, просто показывает уведомление.
+     */
+    public fun onDownloadButtonClicked() {
+        viewModelScope.launch(Dispatchers.Main) {
+            val builder = NotificationCompat.Builder(
+                _application,
+                _application.getString(R.string.default_channel)
+            )
+                .setContentTitle("Симуляция загрузки")
+                .setContentText("В процессе")
+                .setSmallIcon(R.drawable.ic_stat_ic_notification)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+
+            val notificationManager =
+                _application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+
+
+            for (i in 0..100) {
+                builder.setProgress(100, i, false)
+                notificationManager.notify(7777, builder.build())
+                delay(100)
+            }
+            builder.setContentText("Симуляция завершена").setProgress(0, 0, false)
+            notificationManager.notify(7777, builder.build())
+        }
+
+
     }
 
     /**

@@ -1,16 +1,1 @@
-Aaaaa: Bbbb
-file: config.yml
-sadad: Bbbb
-users:
-- Rrr
-- Rrraa
-- name1
-- user
-- name
-- user2
-- namenew
-- roman
-- roman2
-- uuu
-- rjrj
-- "\u0438\u043C\u044F"
+init: true

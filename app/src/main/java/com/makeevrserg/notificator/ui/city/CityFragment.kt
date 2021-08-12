@@ -55,6 +55,9 @@ class CityFragment : Fragment() {
         binding.buttonRegister.setOnClickListener {
             viewModel.onRegisterClicked()
         }
+        binding.buttonDownloadImage.setOnClickListener {
+            viewModel.onDownloadButtonClicked()
+        }
 
 
         viewModel.days.observe(viewLifecycleOwner, {

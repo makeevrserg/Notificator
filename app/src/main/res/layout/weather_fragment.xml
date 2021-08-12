@@ -53,6 +53,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Получить ваше имя"/>
+
+            <Button
+                android:id="@+id/buttonDownloadImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Уведомление с прогрессом"/>
         </LinearLayout>
 
 
