@@ -21,44 +21,49 @@ const val API_KEY = "pk.bbacc9946a4f85dac8af6df0ccf12e5f"
 //http://api.apixu.com/v1/current.json?key=89e8bd89085b41b7a4b142029180210&q=London&lang=en
 interface CityService {
 
+
+    /**
+     * Легкий аналог GooglePlaces.
+     * При вводе локации пользователю возвращается результат городов,
+     * которые содержат последовательность символов, введенную польльзователем.
+     * @param q введенная пользователем локация
+     * @param tag здесь указаны только города
+     */
     @GET("autocomplete.php")
     fun getCurrentCity(
         @Query("q") location: String,
         @Query("tag") tag: String = "place:city"
     ): Deferred<Place>
 
+}
+
+private val requestInterceptor = Interceptor { chain ->
+
+    val url = chain.request()
+        .url()
+        .newBuilder()
+        .addQueryParameter("key", API_KEY)
+        .build()
+    val request = chain.request()
+        .newBuilder()
+        .url(url)
+        .build()
+
+    return@Interceptor chain.proceed(request)
+}
+
+private val okHttpClient = OkHttpClient.Builder()
+    .addInterceptor(requestInterceptor)
+    .build()
 
 
-    companion object {
-        operator fun invoke(
-            //connectivityInterceptor: ConnectivityInterceptor
-        ): CityService {
-            val requestInterceptor = Interceptor { chain ->
+private val retrofit = Retrofit.Builder()
+    .addConverterFactory(GsonConverterFactory.create())
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    .client(okHttpClient)
+    .baseUrl("https://api.locationiq.com/v1/")
+    .build()
 
-                val url = chain.request()
-                    .url()
-                    .newBuilder()
-                    .addQueryParameter("key", API_KEY)
-                    .build()
-                val request = chain.request()
-                    .newBuilder()
-                    .url(url)
-                    .build()
-
-                return@Interceptor chain.proceed(request)
-            }
-
-            val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(requestInterceptor)
-                .build()
-
-            return Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl("https://api.locationiq.com/v1/")
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(CityService::class.java)
-        }
-    }
+object CityAPI {
+    val retrofitService: CityService by lazy { retrofit.create(CityService::class.java) }
 }

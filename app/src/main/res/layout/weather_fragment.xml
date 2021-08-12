@@ -10,16 +10,52 @@
     </data>
 
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <AutoCompleteTextView
-            android:id="@+id/atv"
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="Rostov-on-Don"
-            android:hint="Input city" />
-    </LinearLayout>
+            android:padding="15dp"
+            android:orientation="vertical">
+
+            <AutoCompleteTextView
+                android:id="@+id/atv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:hint="Input city"
+                android:text="Rostov-on-Don" />
+
+
+            <Button
+                android:id="@+id/buttonGetWeather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Получить уведомление о погоде"/>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputTextUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Введите имя пользователя" />
+
+            <Button
+                android:id="@+id/buttonRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Зарегестрироваться"/>
+
+
+            <Button
+                android:id="@+id/buttonCurrentName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Получить ваше имя"/>
+        </LinearLayout>
+
+
+
+    </ScrollView>
 </layout>

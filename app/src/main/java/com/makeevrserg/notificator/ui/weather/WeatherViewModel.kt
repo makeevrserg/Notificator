@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.makeevrserg.notificator.network.WeatherAPI
 import com.makeevrserg.notificator.network.WeatherService
 import com.makeevrserg.notificator.network.response.weather.Weather
 import kotlinx.coroutines.Dispatchers
@@ -16,10 +17,14 @@ class WeatherViewModel : ViewModel() {
     public val weather: LiveData<Weather>
         get() = _weather
 
+    /**
+     * Загружаем погоду из WeatherService
+     * -> после загрузки пользователь видит погоду на экране
+     */
     init {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _weather.postValue(WeatherService().getCurrentWeather().await())
+                _weather.postValue(WeatherAPI.retrofitService.getCurrentWeather().await())
             } catch (e: Exception) {
                 //Поддерживает несколько запросов в секунду. Если больше - будет BadRequest
             }

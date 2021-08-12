@@ -11,8 +11,11 @@
 
     <string name="msg_subscribed">Subscribed to weather topic</string>
     <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
+    <string name="preferences">SimplePrefs</string>
+    <string name="user_name">user_name</string>
 
-    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="default_channel" translatable="false">fcm_default_channel</string>
+    <string name="default_channel_name" translatable="false">Уведомления</string>
     <!--
         This is the name that users will see when interacting with this channel.
         It should describe the category of notifications that will be sent through this channel

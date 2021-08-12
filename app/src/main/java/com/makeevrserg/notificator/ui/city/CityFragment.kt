@@ -38,11 +38,23 @@ class CityFragment : Fragment() {
         binding.viewModel = viewModel
 
 
-        binding.atv.doOnTextChanged { text, start, before, count ->
+        binding.atv.doOnTextChanged { text, _, _, _ ->
             viewModel.onTextChanged(text)
         }
 
+        binding.buttonGetWeather.setOnClickListener {
+            viewModel.onGetWeatherClicked()
+        }
+        binding.buttonCurrentName.setOnClickListener {
+            viewModel.onGetCurrentNameClicked()
+        }
 
+        binding.inputTextUserName.doOnTextChanged { text, _, _, _ ->
+            viewModel.notifyNameChanged(text)
+        }
+        binding.buttonRegister.setOnClickListener {
+            viewModel.onRegisterClicked()
+        }
 
 
         viewModel.days.observe(viewLifecycleOwner, {
